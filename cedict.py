@@ -1,6 +1,6 @@
 # vim:fdm=syntax
 # by tuberry@github
-import subprocess
+import sys
 import textwrap as tp
 
 toneTable = dict(a = ['a','ā','á','ǎ','à'],\
@@ -31,8 +31,8 @@ def tone(pin):
     return ''.join(pinl[:-1])
 
 if __name__ == '__main__':
-    with open('./cedict.tmp') as f:
-        with open('cedict.txt', 'w') as g:
+    with open(sys.argv[1]) as f:
+        with open(sys.argv[2], 'w') as g:
             for l in f:
                 if l[0] == '#':
                     continue
@@ -55,5 +55,3 @@ if __name__ == '__main__':
                         b = '    - ' + b
                     g.write(b+'\n')
                 g.write('[T] ' + ws[0] + '\n')
-    subprocess.call('dictfmt --utf8 --allchars -s CEDICT -u https://cc-cedict.org -j cedict < ./cedict.txt', shell=True)
-    subprocess.call('dictzip cedict.dict', shell=True)

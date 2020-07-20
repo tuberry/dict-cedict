@@ -10,16 +10,24 @@ build_simp: cedicts.index cedicts.dict.dz
 download: $(FILENAME).gz
 
 $(FILENAME).gz:
-	wget https://www.mdbg.net/chinese/export/cedict/$(FILENAME).gz
+	curl -LO https://www.mdbg.net/chinese/export/cedict/$(FILENAME).gz
 
 cedict.tmp: $(FILENAME).gz
 	gzip -d $(FILENAME).gz && mv $(FILENAME) cedict.tmp
 
-cedict.txt cedict.index cedict.dict.dz: cedict.tmp
-	python ./cedict.py
+cedict.txt: cedict.tmp
+	python ./cedict.py ./cedict.tmp cedict.txt
 
-cedicts.txt cedicts.index cedicts.dict.dz: cedict.tmp
-	python ./cedicts.py
+cedicts.txt: cedict.tmp
+	python ./cedicts.py ./cedict.tmp cedicts.txt
+
+cedict.index cedict.dict.dz: cedict.txt
+	dictfmt --utf8 --allchars -s CEDICT -u https://cc-cedict.org -j cedict < ./cedict.txt
+	dictzip cedict.dict
+
+cedicts.index cedicts.dict.dz: cedicts.txt
+	dictfmt --utf8 --allchars -s CEDICTS -u https://cc-cedict.org -j cedicts < ./cedicts.txt
+	dictzip cedicts.dict
 
 install: cedict.index cedict.dict.dz
 	install -Dm644 cedict.index -t $(DESTDIR)/usr/share/dict/
