@@ -1,24 +1,16 @@
-VERSION=20200719
 FILENAME=cedict_1_0_ts_utf-8_mdbg.txt
 PKGNAME=cedict
 
-all: build
+all: $(PKGNAME).index $(PKGNAME).dict.dz
 
-build: $(PKGNAME).index $(PKGNAME).dict.dz
+$(FILENAME):
+	curl -LO https://www.mdbg.net/chinese/export/cedict/$(FILENAME).gz && gzip -d $(FILENAME).gz
 
-download: $(FILENAME).gz
-
-$(FILENAME).gz:
-	curl -LO https://www.mdbg.net/chinese/export/cedict/$(FILENAME).gz
-
-$(PKGNAME).tmp: $(FILENAME).gz
-	gzip -d $(FILENAME).gz && mv $(FILENAME) $(PKGNAME).tmp
-
-$(PKGNAME).txt: $(PKGNAME).tmp
+$(PKGNAME).txt: $(FILENAME)
 ifdef FULL
-	python ./$(PKGNAME).py ./$(PKGNAME).tmp $(PKGNAME).txt
+	python ./$(PKGNAME).py ./$(FILENAME) $(PKGNAME).txt
 else
-	python ./$(PKGNAME)s.py ./$(PKGNAME).tmp $(PKGNAME).txt
+	python ./$(PKGNAME)s.py ./$(FILENAME) $(PKGNAME).txt
 endif
 
 $(PKGNAME).index $(PKGNAME).dict.dz: $(PKGNAME).txt
@@ -29,5 +21,8 @@ install: $(PKGNAME).index $(PKGNAME).dict.dz
 	install -Dm644 $(PKGNAME).index -t $(DESTDIR)/usr/share/dict/
 	install -Dm644 $(PKGNAME).dict.dz -t $(DESTDIR)/usr/share/dict/
 
-clean:
-	-rm -f $(PKGNAME).{index,dict.dz,txt,tmp}
+clean_:
+	-rm -f $(PKGNAME).{index,dict.dz,txt}
+
+clean: clean_
+	-rm -f $(FILENAME)
