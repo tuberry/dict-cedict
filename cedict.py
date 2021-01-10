@@ -1,5 +1,6 @@
-# vim:fdm=syntax
-# by tuberry@github
+#! /bin/python
+# -*- conding: UTF-8 -*-
+
 import sys
 import textwrap as tp
 
