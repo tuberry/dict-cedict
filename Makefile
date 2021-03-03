@@ -18,8 +18,8 @@ $(PKGNAME).index $(PKGNAME).dict.dz: $(PKGNAME).txt
 	dictzip $(PKGNAME).dict
 
 install: $(PKGNAME).index $(PKGNAME).dict.dz
-	install -Dm644 $(PKGNAME).index -t $(DESTDIR)/usr/share/dict/
-	install -Dm644 $(PKGNAME).dict.dz -t $(DESTDIR)/usr/share/dict/
+	install -Dm644 $(PKGNAME).index -t $(DESTDIR)/usr/share/dictd/
+	install -Dm644 $(PKGNAME).dict.dz -t $(DESTDIR)/usr/share/dictd/
 
 clean_:
 	-rm -f $(PKGNAME).{index,dict.dz,txt}
