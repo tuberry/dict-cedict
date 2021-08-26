@@ -1,7 +1,7 @@
-#! /bin/python
+#!usr/bin/env python
 # -*- conding: UTF-8 -*-
 
-import sys
+import argparse
 import textwrap as tp
 
 toneTable = dict(a = ['a','ā','á','ǎ','à'],\
@@ -11,48 +11,61 @@ toneTable = dict(a = ['a','ā','á','ǎ','à'],\
                  u = ['u','ū','ú','ǔ','ù'],\
                  ü = ['ü','ǖ','ǘ','ǚ','ǜ'])
 
+def main():
+    args = parser()
+    if args.mini:
+        cedicts(args.input, args.output)
+    else:
+        cedict(args.input, args.output)
+
+def parser():
+    agp = argparse.ArgumentParser()
+    agp.add_argument('-i', '--input', help='specify the input file')
+    agp.add_argument('-o', '--output', help='specify the output file')
+    agp.add_argument('-m', '--mini', default=True, action=argparse.BooleanOptionalAction,
+                     help='keep words and their definitions only')
+    return agp.parse_args()
+
 def index(pin):
     for h in list(toneTable.keys()):
-        for j,k in enumerate(pin):
-            if(h == k):
-                if h == 'i' and pin[j+1] == 'u':
-                    return j+1
-                else:
-                    return j
+        for j, k in enumerate(pin):
+            if(h != k): continue
+            return (j + 1) if h == 'i' and pin[j+1] == 'u' else j
     return -1
 
 def tone(pin):
     pinl = list(pin.replace('u:', 'ü'))
-    if not pinl[-1].isdigit():
-        return ''.join(pinl)
+    if not pinl[-1].isdigit(): return ''.join(pinl)
     idx = index(''.join(pinl))
-    if(idx == -1):
-        return ''.join(pinl)
-    pinl[idx] = toneTable[pinl[idx]][int(pinl[-1])%5]
+    if(idx == -1): return ''.join(pinl)
+    pinl[idx] = toneTable[pinl[idx]][int(pinl[-1]) % 5]
     return ''.join(pinl[:-1])
 
-if __name__ == '__main__':
-    with open(sys.argv[1]) as f:
-        with open(sys.argv[2], 'w') as g:
+def cedicts(ifile, ofile):
+    with open(ifile) as f:
+        with open(ofile, 'w') as g:
             for l in f:
-                if l[0] == '#':
-                    continue
+                if l[0] == '#': continue
                 ws = l.split(' ', 2)
-                g.write(':'+ws[1]+':\n')
-                tmp = ws[2].replace('] /', ']⋄/').split('⋄')
-                g.write('[P] ' + ' '.join(map(tone, tmp[0][1:-1].split(' '))) + '\n')
+                g.write(':' + ws[1] + ':\n')
+                a = (ws[2].replace('] /', ']⋄/').split('⋄'))[1][1:-2].split('/')
+                for i in range(len(a)):
+                    g.write('\n'.join(list(tp.wrap(a[i], 64))) + '\n')
+
+def cedict(ifile, ofile):
+    with open(ifile) as f:
+        with open(ofile, 'w') as g:
+            for l in f:
+                if l[0] == '#': continue
+                ws = l.split(' ', 2)
+                g.write(':' + ws[1] + ':\n')
+                t = ws[2].replace('] /', ']⋄/').split('⋄')
+                g.write('[P] ' + ' '.join(map(tone, t[0][1:-1].split(' '))) + '\n')
                 a = tmp[1][1:-2].split('/')
                 for i in range(len(a)):
-                    if len(a) == 1:
-                        b = '\n    '.join(list(tp.wrap(a[i], 64)))
-                    else:
-                        b = '\n      '.join(list(tp.wrap(a[i], 64)))
-                    if i == 0:
-                        if len(a) == 1:
-                            b = '[E] ' + b
-                        else:
-                            b = '[E] - ' + b
-                    else:
-                        b = '    - ' + b
-                    g.write(b+'\n')
+                    b = ('\n    ' if len(a) == 1 else '\n      ').join(list(tp.wrap(a[i], 64)))
+                    g.write((('[E] ' if len(a) == 1 else '[E] - ') if i == 0 else '    - ') + b + '\n')
                 g.write('[T] ' + ws[0] + '\n')
+
+if __name__ == '__main__':
+    main()

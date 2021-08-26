@@ -1,16 +1,20 @@
 FILENAME=cedict_1_0_ts_utf-8_mdbg.txt
 PKGNAME=cedict
 
+ifndef MINI
+	MINI=true
+endif
+
 all: $(PKGNAME).index $(PKGNAME).dict.dz
 
 $(FILENAME):
 	curl -LO https://www.mdbg.net/chinese/export/cedict/$(FILENAME).gz && gzip -d $(FILENAME).gz
 
 $(PKGNAME).txt: $(FILENAME)
-ifdef FULL
-	python ./$(PKGNAME).py ./$(FILENAME) $(PKGNAME).txt
+ifeq ($(MINI),true)
+	python ./$(PKGNAME).py -i ./$(FILENAME) -o $(PKGNAME).txt
 else
-	python ./$(PKGNAME)s.py ./$(FILENAME) $(PKGNAME).txt
+	python ./$(PKGNAME).py -i ./$(FILENAME) -o $(PKGNAME).txt --no-mini
 endif
 
 $(PKGNAME).index $(PKGNAME).dict.dz: $(PKGNAME).txt
@@ -21,8 +25,8 @@ install: $(PKGNAME).index $(PKGNAME).dict.dz
 	install -Dm644 $(PKGNAME).index -t $(DESTDIR)/usr/share/dictd/
 	install -Dm644 $(PKGNAME).dict.dz -t $(DESTDIR)/usr/share/dictd/
 
-clean_:
-	-rm -f $(PKGNAME).{index,dict.dz,txt}
+_clean:
+	rm -f $(FILENAME)
 
-clean: clean_
-	-rm -f $(FILENAME)
+clean: _clean
+	rm -f $(PKGNAME).{index,dict.dz,txt}

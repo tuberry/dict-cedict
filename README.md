@@ -6,31 +6,29 @@ A port of [CC-CEDICT] database for Dictd.
 
 ![image](https://user-images.githubusercontent.com/17917040/87877730-94a0a700-ca12-11ea-9a89-38e7d9e04141.png)
 
-## Installation
+## Dependencies
 
-### Requirements
+* curl (makedpends)
+* python3 (makedepends)
+* make (makedepends)
+* dictd (depends/makedepends)
 
-1. curl
-2. python3
-3. dictd
-4. make
-
-### Build && Install
+## Build && Installation
 
 ```bash
-make # FULL=true
+make # MINI=false
 sudo make install
 ```
 
-Also it's avaliable in [AUR](https://aur.archlinux.org/packages/dict-cedict-git/):
+## [AUR](https://aur.archlinux.org/packages/dict-cedict-git/)
 
 ```bash
-yay -S dict-cedict-git
+yay -S dict-cedict-git # for Arch-based distros
 ```
 
-### Configuration
+## Configuration
 
-Add these lines below in `/etc/dict/dictd.conf`:
+Add these lines below to `/etc/dict/dictd.conf`:
 
 ```conf
 database cedict {
@@ -47,8 +45,9 @@ systemctl restart dictd
 
 ## Acknowledgements
 
-1. [CC-CEDICT](https://www.mdbg.net/chinese/dictionary?page=about): Licensed under [Creative Commons 4.0](https://creativecommons.org/licenses/by-sa/4.0). All rights reserved by the authors.
-2. [dictd](https://en.wikipedia.org/wiki/DICT): Dict file format.
+* [dictd]: DICT file format
+* [CC-CEDICT]: licensed under [Creative Commons 4.0](https://creativecommons.org/licenses/by-sa/4.0), all rights reserved by the authors
 
 [CC-CEDICT]:https://www.mdbg.net/chinese/dictionary?page=about
-[license]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
+[license]:https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
+[dictd]:https://en.wikipedia.org/wiki/DICT
