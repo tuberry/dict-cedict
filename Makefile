@@ -26,7 +26,7 @@ install: $(PKGNAME).index $(PKGNAME).dict.dz
 	install -Dm644 $(PKGNAME).dict.dz -t $(DESTDIR)/usr/share/dictd/
 
 _clean:
-	rm -f $(FILENAME)
+	rm -f $(PKGNAME).{index,dict.dz,txt}
 
 clean: _clean
-	rm -f $(PKGNAME).{index,dict.dz,txt}
+	rm -f $(FILENAME)
