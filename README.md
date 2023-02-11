@@ -6,18 +6,10 @@ A port of [CC-CEDICT] database for Dictd.
 
 ![image](https://user-images.githubusercontent.com/17917040/87877730-94a0a700-ca12-11ea-9a89-38e7d9e04141.png)
 
-## Dependencies
-
-* curl (make)
-* python3 (make)
-* make (make)
-* dictd (depends/make)
-
-## Build && Installation
+## Installation
 
 ```bash
-make # MINI=false
-sudo make install
+meson setup build && meson install -C build
 ```
 
 ## [AUR](https://aur.archlinux.org/packages/dict-cedict-git/)
