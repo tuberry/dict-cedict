@@ -2,14 +2,22 @@
 
 A port of [CC-CEDICT] database for Dictd.
 >。<br>
-[![license]](/LICENSE)
+[![license]](/LICENSE.md)
 
 ![image](https://user-images.githubusercontent.com/17917040/87877730-94a0a700-ca12-11ea-9a89-38e7d9e04141.png)
+
+## Dependencies
+
+* curl (make)
+* make (make)
+* gzip (make)
+* python (make)
+* dictd (depend/make)
 
 ## Installation
 
 ```bash
-meson setup build && meson install -C build
+make && sudo make install
 ```
 
 ## [AUR](https://aur.archlinux.org/packages/dict-cedict-git/)
