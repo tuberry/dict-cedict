@@ -20,6 +20,26 @@ A port of [CC-CEDICT] database for Dictd.
 make && sudo make install
 ```
 
+### Options
+
+To make full dictionary entries:
+
+```bash
+MINI=false make && sudo make install
+```
+
+To make dictionary entries indexed by their traditional variant:
+
+```bash
+SIMP=false make && sudo SIMP=false make install
+```
+
+To install both full dictionaries at once:
+
+```bash
+MINI=false make && sudo make install && MINI=false SIMP=false make && sudo SIMP=false make install
+```
+
 ## [AUR](https://aur.archlinux.org/packages/dict-cedict-git/)
 
 ```bash
@@ -31,9 +51,9 @@ yay -S dict-cedict-git # for Arch-based distros
 Add these lines below to `/etc/dict/dictd.conf`:
 
 ```conf
-database cedict {
-data /usr/share/dict/cedict.dict.dz
-index /usr/share/dict/cedict.index
+database cedict-simp {
+data /usr/share/dict/cedict-simp.dict.dz
+index /usr/share/dict/cedict-simp.index
 }
 ```
 
